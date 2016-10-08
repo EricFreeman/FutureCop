@@ -12,21 +12,21 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
         static Texture[] cmTileSets;
         static Sprite[] cmSprites;
         static Sprite[] cmCurSprites;
-        static int cmSelectedTileSet = 0;
+        static int cmSelectedTileSet;
         static List<int> cmSelectedTile = new List<int>();
         static GameObject cmquad;
         static Texture2D cmSelectedColor;
         static Vector2 tileScrollPosition = Vector2.zero;
         static List<Sprite> cmCurSprite = new List<Sprite>();
-        static int curTool = 0;
-        static int curMode = 0;
+        static int curTool;
+        static int curMode;
         static GameObject curLayer;
-        static int selectedLayer = 0;
+        static int selectedLayer;
         static Vector3 cmCurPos;
         static List<Transform> layers = new List<Transform>();
-        static bool highlightLayer = false;
+        static bool highlightLayer;
         static Vector2 drawBox;
-        static bool makeCollider = false;
+        static bool makeCollider;
         //static bool toggleAdvanced = false; //Added it for features later down the line possibly.
         static EditorWindow window;
         static int renameId = -1;
@@ -34,10 +34,6 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
         static Texture2D texHidden;
         static Color highlightColor = Color.red;
         static Event e;
-        static int gridSizeX = 32;
-        static int gridSizeY = 32;
-        static int padSizeX = 1;
-        static int padSizeY = 1;
 
         [MenuItem("Window/CM Tools/Tile Master")]
         public static void OnEnable()
@@ -49,7 +45,6 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
             layers.Clear();
 
             SceneView.onSceneGUIDelegate += OnSceneGUI; //Sets delegate for adding the OnSceneGUI event
-
 
             cmTileSets = UnityEngine.Resources.LoadAll<Texture>("Tilesets"); //Load all tilesets as texture
             cmSprites = UnityEngine.Resources.LoadAll<Sprite>("Tilesets"); //Load all tileset sub objects as tiles
@@ -64,7 +59,7 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
             cmSelectedColor.SetPixel(0, 0, new Color(.5f, .5f, 1f, .5f));
             cmSelectedColor.Apply();
 
-            window = EditorWindow.GetWindow(typeof(TileMaster));//Initialize window
+            window = GetWindow(typeof(TileMaster));//Initialize window
             window.minSize = new Vector2(325, 400);
         }
 
@@ -175,7 +170,7 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
                     {
                         names[i] = cmTileSets[i].name;
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.Log("There was an error getting the names of the files. We'll try to reload the tilesets. If this continues to show, please close the script and try remimporting and check your images.");
                         Debug.Log("Full system error: " + ex.Message);
@@ -184,7 +179,7 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
                 }
 
                 //Mode variable to swith between major features.
-                string[] mode = { "Tile Painter", "Help Video", "Exit" };//, "Pad Tileset"};// Pad tileset not finished yet, removed to allow for earlier release. You can try it out if you want, but is has issues with larger images and places tiles in the wrong order.
+                string[] mode = { "Tile Painter", "Help Video", "Exit" };
                 curMode = GUILayout.Toolbar(curMode, mode);
 
                 if (curMode == 0)
@@ -308,7 +303,7 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
                                 current++;
                             }
                         }
-                        catch (System.Exception ex)
+                        catch (Exception ex)
                         {
                             if (ex.Message.StartsWith("IndexOutOfRangeException"))
                             {
@@ -816,7 +811,7 @@ namespace Assets.Resources.Editor.CM_Tools.TileMaster
             }
             tmpObj.transform.parent = layers[selectedLayer];
             tmpObj.GetComponent<SpriteRenderer>().sortingOrder = layers[selectedLayer].GetComponent<SpriteRenderer>().sortingOrder;
-            tmpObj.transform.localScale = new Vector3(1.01f, 1.01f, 1);
+            tmpObj.transform.localScale = new Vector3(1.02f, 1.02f, 1);
             var tmpCol = tmpObj.GetComponent<PolygonCollider2D>();
             if (tmpCol == null && makeCollider)
             {
